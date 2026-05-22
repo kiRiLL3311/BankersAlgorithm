@@ -71,4 +71,10 @@ public class BankersAlgorithm {
             System.out.println();
         }
     }
+
+    /**
+     * Available resources vector
+     */
+    private final int[] available = {1, 2, 3};
+
 }
