@@ -85,5 +85,23 @@ public class BankersAlgorithm {
 
         System.out.println("---- Checking system safety ----");
 
+        // Simulate allocations on current wit no changing original data
+        // Temp copy of available -> work vector
+        int[] current = new int[resources];
+
+        for (int i = 0; i < resources; i++) {
+
+            current[i] = available[i];
+        }
+
+        // Show c.vector
+        System.out.println("Work vector:");
+
+        for (int value : current) {
+
+            System.out.print(value + " ");
+        }
+
+        System.out.println();
     }
 }
