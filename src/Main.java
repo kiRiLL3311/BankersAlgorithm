@@ -8,5 +8,6 @@ public class Main {
 
         bankersAlgorithm.printNeedMatrix();
 
+        bankersAlgorithm.checkSafety();
     }
 }

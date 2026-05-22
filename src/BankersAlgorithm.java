@@ -77,4 +77,13 @@ public class BankersAlgorithm {
      */
     private final int[] available = {1, 2, 3};
 
+
+    /**
+     * Checks the system safe state
+     */
+    public void checkSafety() {
+
+        System.out.println("---- Checking system safety ----");
+
+    }
 }
