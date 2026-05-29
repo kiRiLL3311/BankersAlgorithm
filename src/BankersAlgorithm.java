@@ -53,7 +53,23 @@ public class BankersAlgorithm {
         }
     }
 
-    /** * Checks the system safe state */
+    /**
+     * Creates a deep copy of a 2D array to safely preserve the original state
+     * @param matrix - [int][int]
+     * @return copy of M - [int][int]
+     */
+    private int[][] copyMatrix(int[][] matrix) {
+        int[][] copy = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                copy[i][j] = matrix[i][j];
+            }
+        }
+        return copy;
+    }
+
+    /** * Checks the system safe state
+     */
     public boolean checkSafety() {
 
         System.out.println("---- Checking system safety ----");
@@ -166,6 +182,73 @@ public class BankersAlgorithm {
     private void exeProcess(int process, int[] work) {
         for (int j = 0; j < resources; j++) {
             work[j] += allocation[process][j];
+        }
+    }
+
+    /**
+     * Simulates how the OS decides whether to grant a process’s resource request
+     */
+    public void requestResources(int process, int[] request) {
+        // Check req need
+        for (int j = 0; j < resources; j++) {
+            if (request[j] > need[process][j]) {
+                System.out.println("Error: Request exceeds need");
+                return;
+            }
+        }
+
+        // 1) Check request <= available
+        for (int j = 0; j < resources; j++) {
+            if (request[j] > available[j]) {
+                System.out.println("Not enough resources. Process must wait");
+                return;
+            }
+        }
+
+        // --Saving old state (for rollback)
+        int[] oldAvailable = available.clone();
+        int[][] oldAllocation = copyMatrix(allocation);
+        int[][] oldNeed = copyMatrix(need);
+
+        // 2) Simulate allocation
+        for (int j = 0; j < resources; j++) {
+            available[j] -= request[j];
+            allocation[process][j] += request[j];
+            need[process][j] -= request[j];
+        }
+
+        System.out.println("----Simulating to allocate----");
+
+        // 3) Check safety
+        boolean safe = checkSafety();
+
+        // 4) Outcome
+        if (safe) {
+            System.out.println("Req GRANTED (safe)");
+        } else {
+            System.out.println("Req DENIED (unsafe)");
+
+            // --If the system unsafe, revert all changes to maintain consistency
+            // --Rollback
+            rollback(oldAvailable, oldAllocation, oldNeed);
+        }
+    }
+
+    /**
+     * Restores the system to its previous state if a resource request leads to an unsafe condition
+     * @param oldAvailable [int]
+     * @param oldAllocation [int][int]
+     * @param oldNeed [int][int]
+     */
+    private void rollback(int[] oldAvailable, int[][] oldAllocation, int[][] oldNeed) {
+        for (int j = 0; j < resources; j++) {
+            available[j] = oldAvailable[j];
+        }
+        for (int i = 0; i < processes; i++) {
+            for (int j = 0; j < resources; j++) {
+                allocation[i][j] = oldAllocation[i][j];
+                need[i][j] = oldNeed[i][j];
+            }
         }
     }
 }
