@@ -9,5 +9,11 @@ public class Main {
         bankersAlgorithm.printNeedMatrix();
 
         bankersAlgorithm.checkSafety();
+
+        System.out.println();
+
+        // test a request
+        int[] request = {1,2,3};
+        bankersAlgorithm.requestResources(1, request);
     }
 }
